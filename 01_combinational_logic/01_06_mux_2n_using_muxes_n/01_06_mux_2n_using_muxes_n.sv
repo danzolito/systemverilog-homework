@@ -29,10 +29,25 @@ module mux_4_1
 
   logic [3:0] low, high;
 
-  mux_2_1 lowmux(d0, d1, sel[0], low);
+  mux_2_1 lowmux (
+    .d0  (d0),
+    .d1  (d1),
+    .sel (sel[0]),
+    .y   (low)
+  );
 
-  mux_2_1 highmux(d2, d3, sel[0], high);
+  mux_2_1 highmux (
+    .d0  (d2),
+    .d1  (d3),
+    .sel (sel[0]),
+    .y   (high)
+  );
 
-  mux_2_1 finalmux(low, high, sel[1], y);
+  mux_2_1 finalmux (
+    .d0  (low),
+    .d1  (high),
+    .sel (sel[1]),
+    .y   (y)
+  );
 
 endmodule

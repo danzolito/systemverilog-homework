@@ -34,10 +34,10 @@ module mux_4_1
 
   always_comb
     case (sel)
-      2'd0: y = d0;
-      2'd1: y = d1;
-      2'd2: y = d2;
-      2'd3: y = d3;
+      2'b00: y = d0;
+      2'b01: y = d1;
+      2'b10: y = d2;
+      2'b11: y = d3;
       default: y = 4'bxxxx;
     endcase
 

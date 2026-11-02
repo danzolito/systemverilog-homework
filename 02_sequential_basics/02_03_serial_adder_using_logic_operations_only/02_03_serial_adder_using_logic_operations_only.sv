@@ -65,6 +65,10 @@ module serial_adder_using_logic_operations_only
   assign sum = a ^ b ^ carry;
 
   always_ff @(posedge clk)
-    carry <= ((a & b) | (carry & (a | b))) & ~rst; // эквивалентно  carry <= (a & b) | (carry & (a ^ b)); по таблице истинности
+    if (rst)
+        carry <= '0;
+    else
+        carry <= (a & b) | (carry & (a | b)); // эквивалентно  carry <= (a & b) | (carry & (a ^ b)); по таблице истинности
+    
 
 endmodule

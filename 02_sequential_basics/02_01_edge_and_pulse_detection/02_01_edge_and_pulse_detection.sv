@@ -32,5 +32,16 @@ module one_cycle_pulse_detector (input clk, rst, a, output detected);
   // Note:
   // See the testbench for the output format ($display task).
 
+  localparam logic [2:0] KEY = 3'b010;
+
+  logic [2:0] strob = 3'b000;
+
+  always_ff @ (posedge clk)
+    if (rst)
+      strob <= 3'b000;
+    else
+      strob <= {strob[1:0], a};
+
+  assign detected = ({strob[1:0], a} == KEY);
 
 endmodule

@@ -31,10 +31,10 @@ module parallel_to_serial
 
     logic [width-1:0] data_reg;
     logic [$clog2(width)-1:0]    bit_idx;
-    logic             busy_reg;
+    wire active = (bit_idx != '0);
 
-    assign busy         = busy_reg | parallel_valid;
-    assign serial_valid = busy_reg | parallel_valid;
+    assign busy         = parallel_valid | active;
+    assign serial_valid = parallel_valid | active;
     assign serial_data  = parallel_valid ? parallel_data[0] : data_reg[bit_idx];
 
     always_ff @(posedge clk)
@@ -42,21 +42,16 @@ module parallel_to_serial
         begin
             data_reg <= '0;
             bit_idx  <= '0;
-            busy_reg <= 1'b0;
         end
         else if (parallel_valid)
         begin
             data_reg <= parallel_data;
             bit_idx  <= 1;
-            busy_reg <= 1'b1;
         end
-        else if (busy_reg)
+        else if (active)
         begin
             if (bit_idx == width - 1)
-            begin
-                bit_idx  <= '0;
-                busy_reg <= 1'b0;
-            end
+                bit_idx <= '0;
             else
                 bit_idx <= bit_idx + 1;
         end

@@ -23,5 +23,17 @@ module round_robin_arbiter_with_2_requests
     // requests -> 01 00 10 11 11 00 11 00 11 11
     // grants   -> 01 00 10 01 10 00 01 00 10 01
 
+    logic prev_priority;
+
+    assign grants[0] = requests[0] & (~prev_priority | ~requests[1]);
+    assign grants[1] = requests[1] & ( prev_priority | ~requests[0]);
+
+    always_ff @ (posedge clk)
+        if (rst)
+            prev_priority <= 1'b0;
+        else
+            prev_priority <= prev_priority ? ~requests[1] : requests[0];
+
+
 
 endmodule

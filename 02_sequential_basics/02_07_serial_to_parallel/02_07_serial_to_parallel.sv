@@ -27,5 +27,26 @@ module serial_to_parallel
     // Note:
     // Check the waveform diagram in the README for better understanding.
 
+    logic [width-1:0]         shift_reg;
+    logic [$clog2(width)-1:0] count;
+
+    assign parallel_valid = serial_valid & (count == width - 1);
+    assign parallel_data  = {serial_data, shift_reg[width-1:1]};
+
+    always_ff @(posedge clk)
+        if (rst)
+        begin
+            shift_reg <= '0;
+            count     <= '0;
+        end
+        else if (serial_valid)
+        begin
+            shift_reg <= {serial_data, shift_reg[width-1:1]};
+            if (count == width - 1)
+                count <= '0;
+            else
+                count <= count + 1;
+        end
+
 
 endmodule
